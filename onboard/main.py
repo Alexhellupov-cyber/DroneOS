@@ -1,33 +1,43 @@
 from common.network import DroneServer
 from common.protocol import decode, encode
-from common.logger import log
+from common.messages import MessageType
 
 server = DroneServer()
 
 while True:
 
-    conn, addr = server.accept()
+    conn, addr = server.wait_connection()
 
-    log(f"Client connected: {addr}")
+    while True:
 
-    data = conn.recv(4096)
+        try:
 
-    if not data:
-        conn.close()
-        continue
+            data = conn.recv(4096)
 
-    packet = decode(data)
+            if not data:
+                break
 
-    log(packet)
+            packet = decode(data)
 
-    if packet["type"] == "ping":
+            print(packet)
 
-        conn.send(
-            encode(
-                {
-                    "type": "pong"
-                }
-            )
-        )
+            if packet["type"] == MessageType.PING.value:
+
+                conn.sendall(
+                    encode(
+                        MessageType.PONG.value,
+                        {
+                            "status": "ok"
+                        }
+                    )
+                )
+
+        except Exception as e:
+
+            print(e)
+
+            break
 
     conn.close()
+
+    print("[NETWORK] Client disconnected")

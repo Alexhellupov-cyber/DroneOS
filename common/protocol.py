@@ -1,9 +1,19 @@
 import json
 
 
-def encode(data: dict) -> bytes:
-    return (json.dumps(data) + "\n").encode()
+def encode(message_type, payload=None):
+
+    if payload is None:
+        payload = {}
+
+    packet = {
+        "type": message_type,
+        "payload": payload
+    }
+
+    return (json.dumps(packet) + "\n").encode()
 
 
-def decode(data: bytes) -> dict:
+def decode(data):
+
     return json.loads(data.decode())

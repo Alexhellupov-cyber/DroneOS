@@ -1,0 +1,6 @@
+HOST = "0.0.0.0"
+PORT = 5000
+
+BUFFER_SIZE = 4096
+
+VERSION = "0.0.1"

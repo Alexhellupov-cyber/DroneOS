@@ -1,34 +1,26 @@
-import socket
+from common.network import DroneServer
+from common.protocol import decode, encode
+from common.logger import log
 
-from common.protocol import encode, decode
-
-HOST = "0.0.0.0"
-PORT = 5000
-
-
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind((HOST, PORT))
-server.listen()
-
-print(f"DroneOS listening on {HOST}:{PORT}")
+server = DroneServer()
 
 while True:
 
     conn, addr = server.accept()
 
-    print(f"Client: {addr}")
+    log(f"Client connected: {addr}")
 
-    packet = conn.recv(4096)
+    data = conn.recv(4096)
 
-    if not packet:
+    if not data:
         conn.close()
         continue
 
-    message = decode(packet)
+    packet = decode(data)
 
-    print(message)
+    log(packet)
 
-    if message["type"] == "ping":
+    if packet["type"] == "ping":
 
         conn.send(
             encode(

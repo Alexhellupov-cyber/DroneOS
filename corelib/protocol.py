@@ -1,6 +1,6 @@
 import json
 
-from common.message import Message
+from corelib.message import Message
 
 
 def encode(message: Message) -> bytes:

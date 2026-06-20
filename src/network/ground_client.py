@@ -8,7 +8,7 @@ class GroundClient:
     def __init__(self):
 
         self.client = DroneClient(
-            "127.0.0.1",
+            "192.168.0.143",
             7000
         )
 

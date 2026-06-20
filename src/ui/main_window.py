@@ -19,6 +19,7 @@ from src.ui.panels.camera_panel import CameraPanel
 from src.ui.panels.console_panel import ConsolePanel
 from src.ui.panels.controls_panel import ControlsPanel
 
+from src.network.ground_client import GroundClient
 
 class MainWindow(QWidget):
 
@@ -153,6 +154,8 @@ class MainWindow(QWidget):
         self.process = ProcessManager()
 
         self.drone = DroneManager()
+        
+        self.ground = GroundClient()
 
         self.keyboard = KeyboardController(
             self.drone
@@ -204,6 +207,10 @@ class MainWindow(QWidget):
 
         self.controls_panel.restart_clicked.connect(
             self.restart_sim
+        )
+
+        self.controls_panel.ground_clicked.connect(
+            self.connect_ground
         )
 
         self.controls_panel.arm_clicked.connect(
@@ -425,4 +432,24 @@ class MainWindow(QWidget):
             EventBus.emit(
                 Events.LOG,
                 f"❌ Connection failed: {e}"
+            )
+
+    def connect_ground(self):
+
+        try:
+
+            self.console_panel.log(
+                "Connecting to Ground..."
+            )
+
+            self.ground.connect()
+
+            self.console_panel.log(
+                "Connected to Ground"
+            )
+
+        except Exception as e:
+
+            self.console_panel.log(
+                f"Ground error: {e}"
             )

@@ -13,6 +13,8 @@ class ControlsPanel(QWidget):
     stop_clicked = Signal()
     restart_clicked = Signal()
 
+    ground_clicked = Signal()
+
     arm_clicked = Signal()
     takeoff_clicked = Signal()
     land_clicked = Signal()
@@ -29,13 +31,14 @@ class ControlsPanel(QWidget):
 
         simulator_layout = QVBoxLayout()
 
-        self.btn_start = QPushButton("▶ Start")
-        self.btn_stop = QPushButton("■ Stop")
-        self.btn_restart = QPushButton("⟳ Restart")
-
+        self.btn_start = QPushButton("▶ Старт симулятора")
+        self.btn_stop = QPushButton("■ Стоп симулятора")
+        self.btn_restart = QPushButton("⟳ Рестарт симулятора")
+        self.btn_ground = QPushButton("Соеденить")
         simulator_layout.addWidget(self.btn_start)
         simulator_layout.addWidget(self.btn_stop)
         simulator_layout.addWidget(self.btn_restart)
+        simulator_layout.addWidget(self.btn_ground)
 
         simulator.setLayout(simulator_layout)
 
@@ -45,10 +48,10 @@ class ControlsPanel(QWidget):
 
         flight_layout = QVBoxLayout()
 
-        self.btn_arm = QPushButton("🚀 ARM")
-        self.btn_takeoff = QPushButton("⬆ TAKEOFF")
-        self.btn_land = QPushButton("⬇ LAND")
-        self.btn_rtl = QPushButton("🏠 RTL")
+        self.btn_arm = QPushButton("Взвод")
+        self.btn_takeoff = QPushButton("⬆ Взлет")
+        self.btn_land = QPushButton("⬇ Посадка")
+        self.btn_rtl = QPushButton("Возврат")
 
         flight_layout.addWidget(self.btn_arm)
         flight_layout.addWidget(self.btn_takeoff)
@@ -68,7 +71,7 @@ class ControlsPanel(QWidget):
         self.btn_start.clicked.connect(self.start_clicked.emit)
         self.btn_stop.clicked.connect(self.stop_clicked.emit)
         self.btn_restart.clicked.connect(self.restart_clicked.emit)
-
+        self.btn_ground.clicked.connect(self.ground_clicked.emit)
         self.btn_arm.clicked.connect(self.arm_clicked.emit)
         self.btn_takeoff.clicked.connect(self.takeoff_clicked.emit)
         self.btn_land.clicked.connect(self.land_clicked.emit)

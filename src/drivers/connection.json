@@ -1,0 +1,6 @@
+{
+    "protocol": "udp",
+    "host": "127.0.0.1",
+    "port": 14540,
+    "timeout": 10
+}

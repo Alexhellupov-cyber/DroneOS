@@ -2,6 +2,7 @@ import asyncio
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout
 
+from corelib import message
 from src.simulator.process_manager import ProcessManager
 
 from src.core.managers.drone_manager import DroneManager
@@ -18,8 +19,8 @@ from src.ui.panels.telemetry_panel import TelemetryPanel
 from src.ui.panels.camera_panel import CameraPanel
 from src.ui.panels.console_panel import ConsolePanel
 from src.ui.panels.controls_panel import ControlsPanel
+from src.network.connection_manager import ConnectionManager
 
-from src.network.ground_client import GroundClient
 
 class MainWindow(QWidget):
 
@@ -155,12 +156,11 @@ class MainWindow(QWidget):
 
         self.drone = DroneManager()
         
-        self.ground = GroundClient()
-
         self.keyboard = KeyboardController(
             self.drone
         )
 
+        self.network = ConnectionManager()
 
     def create_timers(self):
 
@@ -209,8 +209,8 @@ class MainWindow(QWidget):
             self.restart_sim
         )
 
-        self.controls_panel.ground_clicked.connect(
-            self.connect_ground
+        self.controls_panel.connect_clicked.connect(
+            self.connect_network
         )
 
         self.controls_panel.arm_clicked.connect(
@@ -390,6 +390,28 @@ class MainWindow(QWidget):
             self.drone.rtl()
         )
 
+    def connect_network(self):
+
+        self.console_panel.log(
+            "Подключение к Ground..."
+        )
+
+        if self.network.connect():
+
+            self.console_panel.log(
+                "Ground подключен"
+            )
+
+            self.network.subscribe(
+                self.on_message
+            )
+
+        else:
+
+            self.console_panel.log(
+                "Ошибка подключения"
+            )
+
     # =====================================================
     # Keyboard
     # =====================================================
@@ -434,22 +456,10 @@ class MainWindow(QWidget):
                 f"❌ Connection failed: {e}"
             )
 
-    def connect_ground(self):
+    def on_message(self, message):
 
-        try:
+        print(message)
 
-            self.console_panel.log(
-                "Connecting to Ground..."
-            )
-
-            self.ground.connect()
-
-            self.console_panel.log(
-                "Connected to Ground"
-            )
-
-        except Exception as e:
-
-            self.console_panel.log(
-                f"Ground error: {e}"
-            )
+        self.console_panel.log(
+            f"RX: {message.type}"
+        )

@@ -19,8 +19,13 @@ from src.ui.panels.telemetry_panel import TelemetryPanel
 from src.ui.panels.camera_panel import CameraPanel
 from src.ui.panels.console_panel import ConsolePanel
 from src.ui.panels.controls_panel import ControlsPanel
-from src.network.connection_manager import ConnectionManager
 
+from src.network.network_manager import NetworkManager
+from src.network.router import MessageRouter
+
+from src.services.telemetry_service import TelemetryService
+
+from src.core.controllers.application_controller import ApplicationController
 
 class MainWindow(QWidget):
 
@@ -160,7 +165,11 @@ class MainWindow(QWidget):
             self.drone
         )
 
-        self.network = ConnectionManager()
+        self.network = NetworkManager()
+
+        self.router = MessageRouter()
+        self.telemetry_service = TelemetryService(self)
+        self.controller = ApplicationController()
 
     def create_timers(self):
 
@@ -186,7 +195,7 @@ class MainWindow(QWidget):
 
         EventBus.subscribe(
             Events.TELEMETRY,
-            self.droneos_panel.update
+            self.update_system_telemetry
         )
 
         self.droneos_panel.center_clicked.connect(
@@ -228,7 +237,11 @@ class MainWindow(QWidget):
         self.controls_panel.rtl_clicked.connect(
             self.rtl_drone
         )
-    
+
+        self.router.register(
+            "telemetry",
+            self.telemetry_service.handle
+        )
     # =====================================================
     # Telemetry
     # =====================================================
@@ -396,10 +409,10 @@ class MainWindow(QWidget):
             "Подключение к Ground..."
         )
 
-        if self.network.connect():
+        if self.network.connect("tcp"):
 
             self.console_panel.log(
-                "Ground подключен"
+                "TCP подключен"
             )
 
             self.network.subscribe(
@@ -458,8 +471,14 @@ class MainWindow(QWidget):
 
     def on_message(self, message):
 
-        print(message)
+        self.router.route(message)
+
+    def update_system_telemetry(self, payload):
 
         self.console_panel.log(
-            f"RX: {message.type}"
+            "Telemetry received"
+        )
+
+        self.droneos_panel.status.setText(
+            f"🟢 {payload['hostname']}"
         )

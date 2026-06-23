@@ -1,0 +1,7 @@
+{
+    "flight_controller": {
+        "driver": "betaflight",
+        "port": "/dev/serial0",
+        "baudrate": 115200
+    }
+}

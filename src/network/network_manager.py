@@ -1,20 +1,65 @@
-from src.network.manager import ConnectionManager
-from src.network.transports.wifi import WiFiTransport
+from src.network.transport_manager import ConnectionManager
+from src.network.transports.tcp import TCPTransport
+from src.network.transports.serial import SerialTransport
+from src.config.config_manager import ConfigManager
 
 
 class NetworkManager:
 
     def __init__(self):
-
+        self.config = ConfigManager()
         self.connection = ConnectionManager()
 
-        self.connection.add_transport(
-            WiFiTransport()
+        # Регистрируем транспорт
+        self.connection.register_transport(
+            "tcp",
+            TCPTransport(
+
+                host=self.config.get(
+                    "tcp",
+                    "host"
+                ),
+
+                port=self.config.get(
+                    "tcp",
+                    "port"
+                )
+
+            )
         )
 
-    def connect(self):
+        # Регистрируем сериальный транспорт
+        self.connection.register_transport(
+            "serial",
+            SerialTransport(
 
-        return self.connection.connect()
+                port=self.config.get(
+                    "serial",
+                    "port"
+                ),
+
+                baudrate=self.config.get(
+                    "serial",
+                    "baudrate"
+                )
+
+            )
+        )
+
+        # Делаем его активным
+        self.connection.set_active_transport(
+            "tcp"
+        )
+
+    def connect(self, transport="tcp"):
+
+        return self.connection.connect(
+            transport
+        )
+
+    def disconnect(self):
+
+        return self.connection.disconnect()
 
     def send(self, message):
 
@@ -23,9 +68,7 @@ class NetworkManager:
     def receive(self):
 
         return self.connection.receive()
-    
+
     def subscribe(self, callback):
 
-        self.connection.active_transport.subscribe(
-            callback
-        )
+        self.connection.subscribe(callback)

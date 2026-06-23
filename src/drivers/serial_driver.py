@@ -28,6 +28,6 @@ class SerialDriver:
 
         self.serial.write(data)
 
-    def receive(self, size: int = 1024) -> bytes:
+    def receive(self, size: int) -> bytes:
 
         return self.serial.read(size)

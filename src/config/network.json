@@ -1,0 +1,11 @@
+{
+  "transport": "auto",
+  "tcp": {
+    "host": "192.168.0.143",
+    "port": 7000
+  },
+  "serial": {
+    "port": "/dev/serial0",
+    "baudrate": 115200
+  }
+}

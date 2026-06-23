@@ -15,7 +15,8 @@ class SerialDriver:
         self.serial = serial.Serial(
             port=self.port,
             baudrate=self.baudrate,
-            timeout=1
+            timeout=0,
+            write_timeout=0
         )
 
     def disconnect(self):

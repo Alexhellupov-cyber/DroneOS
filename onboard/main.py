@@ -29,13 +29,21 @@ def main():
 
             while True:
 
-                message = telemetry(
+                incoming = client.receive_nowait()
+
+                if incoming:
+
+                    logger.info(
+                        f"GROUND -> {incoming}"
+                    )
+
+                outgoing = telemetry(
                     telemetry_service.collect()
                 )
 
-                client.send(message)
+                client.send(outgoing)
 
-                time.sleep(1)
+                time.sleep(0.02)
 
         except Exception as e:
 

@@ -1,6 +1,6 @@
 import socket
 import struct
-
+import select
 from corelib.protocol import encode, decode
 from corelib.logger import get_logger
 
@@ -46,6 +46,20 @@ class Connection:
         logger.info(f"RX -> {message}")
 
         return message
+
+    def receive_nowait(self):
+
+        readable, _, _ = select.select(
+            [self.socket],
+            [],
+            [],
+            0
+        )
+
+        if not readable:
+            return None
+
+        return self.receive()
 
     def send(self, message):
 

@@ -32,3 +32,11 @@ def heartbeat():
         source="onboard",
         target="ground"
     )
+
+def rc(payload):
+    return Message(
+        type="rc",
+        source="ground",
+        target="onboard",
+        payload=payload
+    )

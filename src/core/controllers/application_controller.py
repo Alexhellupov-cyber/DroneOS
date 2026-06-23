@@ -1,4 +1,6 @@
 from src.network.network_manager import NetworkManager
+from src.core.services.rc_service import RCService
+from src.core.services.network_service import NetworkService
 
 
 class ApplicationController:
@@ -7,6 +9,22 @@ class ApplicationController:
 
         self.network = NetworkManager()
 
+        self.network_service = NetworkService(
+            self.network
+        )
+
+        self.rc = RCService()
+
     def connect_ground(self):
 
         self.network.connect()
+
+    def update(self):
+
+        packet = self.rc.update()
+
+        self.network_service.send_rc(
+            packet
+        )
+
+        return packet

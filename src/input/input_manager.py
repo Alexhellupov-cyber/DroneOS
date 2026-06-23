@@ -1,13 +1,12 @@
-from src.drivers.mavsdk.velocity import Velocity
+from src.input.rc_packet import RCPacket
 
 
 class InputManager:
 
     def __init__(self):
-        self.velocity = Velocity()
 
-    def update(self, keys):
+        self.packet = RCPacket()
 
-        self.velocity.update(keys)
+    def get_packet(self):
 
-        return self.velocity
+        return self.packet

@@ -61,7 +61,5 @@ class OnboardServer:
             client.close()
 
     if __name__ == "__main__":
-
         server = OnboardServer()
-
         server.start()

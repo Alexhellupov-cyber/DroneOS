@@ -51,7 +51,7 @@ class OnboardServer:
                     packet = RCPacket(
                         **message["payload"]
                     )
-
+                    print(packet)
                     self.crsf.send(packet)
 
                 except Exception as e:

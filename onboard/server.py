@@ -1,6 +1,6 @@
 import socket
 import json
-
+from corelib.network import DroneServer
 from src.drivers.crsf.driver import CRSFDriver
 from src.input.rc_packet import RCPacket
 
@@ -19,37 +19,27 @@ class OnboardServer:
             socket.SOCK_STREAM
         )
 
-        self.server.setsockopt(
-            socket.SOL_SOCKET,
-            socket.SO_REUSEADDR,
-            1
+        self.server = DroneServer(
+            HOST,
+            PORT
         )
-
-        self.server.bind((HOST, PORT))
-        self.server.listen(1)
-
-        print(f"Listening {HOST}:{PORT}")
 
     def start(self):
 
         while True:
 
-            client, addr = self.server.accept()
+            connection, addr = self.server.accept()
 
             print(addr)
 
             while True:
 
-                data = client.recv(4096)
-
-                if not data:
-                    break
-
                 try:
 
-                    message = json.loads(
-                        data.decode()
-                    )
+                    message = connection.receive()
+
+                    if message is None:
+                        break
 
                     if message["type"] != "rc":
                         continue
@@ -64,7 +54,7 @@ class OnboardServer:
 
                     print(e)
 
-            client.close()
+            connection.close()
 
 if __name__ == "__main__":
         server = OnboardServer()

@@ -41,13 +41,15 @@ class OnboardServer:
                     if message is None:
                         break
 
-                    if message["type"] != "rc":
+                    if message.type != "rc":
                         continue
 
                     packet = RCPacket(
-                        **message["payload"]
+                        **message.payload
                     )
+
                     print(packet)
+
                     self.crsf.send(packet)
 
                 except Exception as e:

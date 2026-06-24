@@ -23,6 +23,13 @@ class USBInput:
 
         pygame.event.pump()
 
+        axes = []
+
+        for i in range(self.joystick.get_numaxes()):
+            axes.append(round(self.joystick.get_axis(i), 3))
+
+        print("AXES:", axes)
+
         packet = RCPacket()
 
         packet.roll = ChannelMapper.axis_to_rc(

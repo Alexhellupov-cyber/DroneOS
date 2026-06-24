@@ -23,8 +23,9 @@ class ApplicationController:
 
         packet = self.rc.update()
 
-        self.network_service.send_rc(
-            packet
-        )
+        try:
+            self.network_service.send_rc(packet)
+        except Exception:
+            pass
 
         return packet

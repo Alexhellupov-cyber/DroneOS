@@ -27,7 +27,10 @@ class SerialDriver:
 
     def send(self, data: bytes):
 
-        self.serial.write(data)
+        written = self.serial.write(data)
+        self.serial.flush()
+
+        print(f"UART WRITE: {written} bytes")
 
     def receive(self, size: int) -> bytes:
 

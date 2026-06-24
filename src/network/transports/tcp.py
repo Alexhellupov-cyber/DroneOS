@@ -33,6 +33,8 @@ class TCPTransport(BaseTransport):
             daemon=True
         ).start()
 
+        return True
+
     def disconnect(self):
 
         self.connected = False

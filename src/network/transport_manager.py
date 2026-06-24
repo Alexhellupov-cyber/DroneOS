@@ -47,7 +47,7 @@ class ConnectionManager:
 
                     print(f"Connected via {name}")
 
-                    return
+                    return True
 
                 except Exception as e:
 
@@ -69,7 +69,7 @@ class ConnectionManager:
                 "No active transport selected."
             )
 
-        self.active_transport.connect()
+        return self.active_transport.connect()
 
     def disconnect(self):
 

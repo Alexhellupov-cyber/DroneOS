@@ -32,7 +32,7 @@ class MainWindow(QWidget):
     def __init__(self):
 
         super().__init__()
-
+        self.connected = False
         self.setup_window()
 
         self.build_ui()
@@ -184,7 +184,8 @@ class MainWindow(QWidget):
 
     def update_loop(self):
 
-        self.controller.update()
+        if self.connected:
+            self.controller.update()
 
         self.update_telemetry()
     
@@ -416,6 +417,8 @@ class MainWindow(QWidget):
         )
 
         if self.network.connect("tcp"):
+
+            self.connected = True
 
             self.console_panel.log(
                 "TCP подключен"

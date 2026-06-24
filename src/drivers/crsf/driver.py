@@ -1,36 +1,51 @@
+from src.drivers.serial_driver import SerialDriver
 from src.drivers.crsf.encoder import CRSFPacker
+from src.input.rc_packet import RCPacket
 
 
 class CRSFDriver:
 
-    def __init__(self, serial_driver):
+    def __init__(self):
 
-        self.serial = serial_driver
+        self.serial = SerialDriver(
+            "/dev/serial0",
+            420000
+        )
 
-    def send(self, packet):
+        self.serial.connect()
+
+    def send(self, packet: RCPacket):
 
         channels = [
 
-            CRSFPacker.rc_to_crsf(packet.roll),
-            CRSFPacker.rc_to_crsf(packet.pitch),
-            CRSFPacker.rc_to_crsf(packet.yaw),
-            CRSFPacker.rc_to_crsf(packet.throttle),
+            packet.roll,
+            packet.pitch,
+            packet.throttle,
+            packet.yaw,
 
-            CRSFPacker.rc_to_crsf(packet.aux1),
-            CRSFPacker.rc_to_crsf(packet.aux2),
-            CRSFPacker.rc_to_crsf(packet.aux3),
-            CRSFPacker.rc_to_crsf(packet.aux4),
+            packet.aux1,
+            packet.aux2,
+            packet.aux3,
+            packet.aux4,
 
-            CRSFPacker.rc_to_crsf(1000),
-            CRSFPacker.rc_to_crsf(1000),
-            CRSFPacker.rc_to_crsf(1000),
-            CRSFPacker.rc_to_crsf(1000),
-            CRSFPacker.rc_to_crsf(1000),
-            CRSFPacker.rc_to_crsf(1000),
-            CRSFPacker.rc_to_crsf(1000),
-            CRSFPacker.rc_to_crsf(1000),
+            1000,
+            1000,
+            1000,
+            1000,
+            1000,
+            1000,
+            1000,
+            1000
+
         ]
 
-        frame = CRSFPacker.encode(channels)
+        channels = [
+            CRSFPacker.rc_to_crsf(x)
+            for x in channels
+        ]
+
+        frame = CRSFPacker.encode(
+            channels
+        )
 
         self.serial.send(frame)

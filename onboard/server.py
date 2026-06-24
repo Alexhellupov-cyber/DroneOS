@@ -1,6 +1,9 @@
 import socket
 import json
 
+from src.drivers.crsf.driver import CRSFDriver
+from src.input.rc_packet import RCPacket
+
 HOST = "0.0.0.0"
 PORT = 5000
 
@@ -8,6 +11,8 @@ PORT = 5000
 class OnboardServer:
 
     def __init__(self):
+
+        self.crsf = CRSFDriver()
 
         self.server = socket.socket(
             socket.AF_INET,
@@ -17,15 +22,15 @@ class OnboardServer:
         self.server.bind((HOST, PORT))
         self.server.listen(1)
 
-        print(f"Listening on {HOST}:{PORT}")
+        print(f"Listening {HOST}:{PORT}")
 
     def start(self):
 
         while True:
 
-            client, address = self.server.accept()
+            client, addr = self.server.accept()
 
-            print(f"Ground connected: {address}")
+            print(addr)
 
             while True:
 
@@ -40,10 +45,23 @@ class OnboardServer:
                         data.decode()
                     )
 
-                    print(message)
+                    if message["type"] != "rc":
+                        continue
+
+                    packet = RCPacket(
+                        **message["payload"]
+                    )
+
+                    self.crsf.send(packet)
 
                 except Exception as e:
 
                     print(e)
 
             client.close()
+
+    if __name__ == "__main__":
+
+        server = OnboardServer()
+
+        server.start()

@@ -5,9 +5,9 @@ from src.core.services.network_service import NetworkService
 
 class ApplicationController:
 
-    def __init__(self):
+    def __init__(self, network):
 
-        self.network = NetworkManager()
+        self.network = network
 
         self.network_service = NetworkService(
             self.network
@@ -23,9 +23,10 @@ class ApplicationController:
 
         packet = self.rc.update()
 
-        try:
-            self.network_service.send_rc(packet)
-        except Exception:
-            pass
+        print("RC:", packet)
+
+        self.network_service.send_rc(
+            packet
+        )
 
         return packet

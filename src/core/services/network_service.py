@@ -9,6 +9,8 @@ class NetworkService:
 
     def send_rc(self, packet):
 
+        print("SEND RC")
+
         self.network.send(
             rc(
                 packet.to_dict()

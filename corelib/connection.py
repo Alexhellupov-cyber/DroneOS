@@ -62,7 +62,7 @@ class Connection:
         return self.receive()
 
     def send(self, message):
-
+        print("TCP SEND:", message)
         payload = encode(message)
 
         header = struct.pack(">I", len(payload))

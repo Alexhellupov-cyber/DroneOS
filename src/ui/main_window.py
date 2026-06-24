@@ -169,7 +169,9 @@ class MainWindow(QWidget):
 
         self.router = MessageRouter()
         self.telemetry_service = TelemetryService(self)
-        self.controller = ApplicationController()
+        self.controller = ApplicationController(
+            self.network
+        )
 
     def create_timers(self):
 

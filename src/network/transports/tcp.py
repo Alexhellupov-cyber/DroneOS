@@ -24,7 +24,12 @@ class TCPTransport(BaseTransport):
 
     def connect(self):
 
+        print("TCPTransport client:", id(self.client))
+        print("Socket before connect:", self.client.socket.fileno())
+
         self.client.connect()
+
+        print("Socket after connect:", self.client.socket.fileno())
 
         self.connected = True
 
@@ -40,6 +45,9 @@ class TCPTransport(BaseTransport):
         self.connected = False
 
     def send(self, message):
+
+        print("SEND client:", id(self.client))
+        print("SEND socket:", self.client.socket.fileno())
 
         self.client.send(message)
     

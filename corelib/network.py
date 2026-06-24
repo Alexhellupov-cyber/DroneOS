@@ -87,6 +87,8 @@ class DroneClient:
 
     def send(self, message):
 
+        print("DroneClient socket:", self.socket.fileno())
+
         self.connection.send(message)
 
     def receive(self):

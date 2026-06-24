@@ -176,11 +176,17 @@ class MainWindow(QWidget):
         self.timer = QTimer()
 
         self.timer.timeout.connect(
-            self.update_telemetry
+            self.update_loop
         )
 
         self.timer.start(100)
         pass
+
+    def update_loop(self):
+
+        self.controller.update()
+
+        self.update_telemetry()
     
     def connect_events(self):
 

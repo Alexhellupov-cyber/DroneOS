@@ -48,4 +48,8 @@ class CRSFDriver:
             channels
         )
 
+        print(frame.hex())
+
         self.serial.send(frame)
+
+    

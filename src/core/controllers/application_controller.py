@@ -19,6 +19,10 @@ class ApplicationController:
 
         self.network.connect()
 
+    def set_arm(self, value: bool):
+
+        self.rc.set_arm(value)
+
     def update(self):
 
         packet = self.rc.update()

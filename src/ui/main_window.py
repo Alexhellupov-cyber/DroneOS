@@ -38,7 +38,7 @@ class MainWindow(QWidget):
         self.build_ui()
 
         self.create_managers()
-
+        self.arm_state = False
         self.connect_events()
 
         self.create_timers()
@@ -348,9 +348,19 @@ class MainWindow(QWidget):
 
     def arm_drone(self):
 
-        asyncio.create_task(
-            self._arm_task()
+        self.arm_state = not self.arm_state
+
+        self.controller.set_arm(
+            self.arm_state
         )
+
+        if self.arm_state:
+
+            self.console_panel.log("ARM ON")
+
+        else:
+
+            self.console_panel.log("ARM OFF")
 
 
     async def _arm_task(self):

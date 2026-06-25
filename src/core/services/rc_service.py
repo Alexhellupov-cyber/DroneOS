@@ -7,6 +7,16 @@ class RCService:
 
         self.input = USBInput()
 
+        self.armed = False
+
+    def set_arm(self, value: bool):
+
+        self.armed = value
+
     def update(self):
 
-        return self.input.update()
+        packet = self.input.update()
+
+        packet.aux1 = 2000 if self.armed else 1000
+
+        return packet

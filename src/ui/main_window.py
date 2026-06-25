@@ -181,7 +181,7 @@ class MainWindow(QWidget):
             self.update_loop
         )
 
-        self.timer.start(10)
+        self.timer.start(100)
         pass
 
     def update_loop(self):

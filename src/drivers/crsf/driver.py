@@ -49,7 +49,7 @@ class CRSFDriver:
         )
 
         print(frame.hex())
-
+        print(len(frame), frame.hex())
         self.serial.send(frame)
 
-    
+        print(channels)

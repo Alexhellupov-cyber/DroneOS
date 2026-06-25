@@ -11,8 +11,13 @@ class CRSFPacker:
 
         value = max(1000, min(2000, value))
 
-        return int(
-            (value - 1000) * 1639 / 1000 + 172
+    @staticmethod
+    def rc_to_crsf(value: int):
+
+        value = max(1000, min(2000, value))
+
+        return round(
+            172 + (value - 1000) * (1811 - 172) / 1000
         )
 
     @staticmethod

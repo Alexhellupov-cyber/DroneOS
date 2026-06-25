@@ -43,9 +43,7 @@ def main():
                         packet = RCPacket(
                             **incoming.payload
                         )
-
                         crsf.send(packet)
-
                 outgoing = telemetry(
                     telemetry_service.collect()
                 )

@@ -63,3 +63,33 @@ class MSP:
             "payload": payload,
             "checksum": checksum
         }
+    
+    def set_raw_rc(
+        self,
+        roll,
+        pitch,
+        yaw,
+        throttle,
+        aux1=1000,
+        aux2=1000,
+        aux3=1000,
+        aux4=1000,
+    ):
+        import struct
+
+        payload = struct.pack(
+            "<8H",
+            roll,
+            pitch,
+            yaw,
+            throttle,
+            aux1,
+            aux2,
+            aux3,
+            aux4,
+        )
+
+        return self.request(
+            Commands.SET_RAW_RC,
+            payload
+        )

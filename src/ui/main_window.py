@@ -181,12 +181,13 @@ class MainWindow(QWidget):
             self.update_loop
         )
 
-        self.timer.start(100)
+        self.timer.start(10)
         pass
 
     def update_loop(self):
 
         if self.connected:
+            print("SEND")
             self.controller.update()
 
         self.update_telemetry()

@@ -43,7 +43,16 @@ class BetaflightDriver(FlightController):
         aux3=1000,
         aux4=1000,
     ):
-        print(f"RC: {roll} {pitch} {yaw} {throttle}")
+        self.msp.set_raw_rc(
+            roll,
+            pitch,
+            yaw,
+            throttle,
+            aux1,
+            aux2,
+            aux3,
+            aux4,
+        )
 
     def get_telemetry(self):
         return {}

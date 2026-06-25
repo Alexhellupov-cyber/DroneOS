@@ -1,5 +1,6 @@
 import time
-
+from src.drivers.crsf.driver import CRSFDriver
+from src.input.rc_packet import RCPacket
 from corelib.config import ONBOARD_BIND_HOST, ONBOARD_PORT
 from corelib.logger import get_logger
 from corelib.messages import telemetry
@@ -13,7 +14,7 @@ logger = get_logger()
 def main():
 
     telemetry_service = TelemetryService()
-
+    crsf = CRSFDriver()
     server = DroneServer(
         ONBOARD_BIND_HOST,
         ONBOARD_PORT
@@ -36,6 +37,14 @@ def main():
                     logger.info(
                         f"GROUND -> {incoming}"
                     )
+
+                    if incoming.type == "rc":
+
+                        packet = RCPacket(
+                            **incoming.payload
+                        )
+
+                        crsf.send(packet)
 
                 outgoing = telemetry(
                     telemetry_service.collect()

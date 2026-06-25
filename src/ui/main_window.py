@@ -27,6 +27,8 @@ from src.services.telemetry_service import TelemetryService
 
 from src.core.controllers.application_controller import ApplicationController
 
+from src.video.video_thread import VideoThread
+
 class MainWindow(QWidget):
 
     def __init__(self):
@@ -172,6 +174,20 @@ class MainWindow(QWidget):
         self.controller = ApplicationController(
             self.network
         )
+        # ==========================
+        # Video
+        # ==========================
+
+        self.video = VideoThread(
+            "192.168.0.102"  # <-- IP Raspberry
+        )
+
+        self.video.frame_ready.connect(
+            self.camera_panel.set_frame
+        )
+
+        self.video.start()
+
 
     def create_timers(self):
 

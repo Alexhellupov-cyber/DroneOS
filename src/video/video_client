@@ -1,0 +1,69 @@
+import socket
+import struct
+
+import cv2
+import numpy as np
+
+from PySide6.QtGui import QImage
+
+
+class VideoClient:
+
+    def __init__(self, host, port=5600):
+
+        self.socket = socket.socket()
+        self.socket.connect((host, port))
+
+    def receive(self):
+
+        header = self._recv_exact(4)
+
+        if header is None:
+            return None
+
+        size = struct.unpack(">I", header)[0]
+
+        data = self._recv_exact(size)
+
+        if data is None:
+            return None
+
+        frame = cv2.imdecode(
+            np.frombuffer(data, dtype=np.uint8),
+            cv2.IMREAD_COLOR
+        )
+
+        if frame is None:
+            return None
+
+        rgb = cv2.cvtColor(
+            frame,
+            cv2.COLOR_BGR2RGB
+        )
+
+        h, w, ch = rgb.shape
+
+        return QImage(
+            rgb.data,
+            w,
+            h,
+            ch * w,
+            QImage.Format_RGB888
+        ).copy()
+
+    def _recv_exact(self, size):
+
+        data = b""
+
+        while len(data) < size:
+
+            packet = self.socket.recv(
+                size - len(data)
+            )
+
+            if not packet:
+                return None
+
+            data += packet
+
+        return data

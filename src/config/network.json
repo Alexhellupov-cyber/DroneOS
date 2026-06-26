@@ -2,7 +2,7 @@
   "transport": "auto",
   "tcp": {
     "host": "192.168.0.102",
-    "port": 5000
+    "port": 5001
   },
   "serial": {
     "port": "/dev/serial0",

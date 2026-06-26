@@ -5,7 +5,7 @@ from src.drivers.crsf.driver import CRSFDriver
 from src.input.rc_packet import RCPacket
 
 HOST = "0.0.0.0"
-PORT = 5000
+PORT = 5001
 
 
 class OnboardServer:

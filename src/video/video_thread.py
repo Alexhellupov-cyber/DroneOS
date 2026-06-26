@@ -1,32 +1,49 @@
 from PySide6.QtCore import QThread, Signal
+from PySide6.QtGui import QImage
 
-from src.video.video_client import VideoClient
+import cv2
 
 
 class VideoThread(QThread):
 
-    frame_ready = Signal(object)
+    frame_ready = Signal(QImage)
 
-    def __init__(self, host):
-
+    def __init__(self, ip):
         super().__init__()
-
-        self.host = host
 
         self.running = True
 
+        self.url = f"http://{ip}:5000/video"
+
     def run(self):
 
-        client = VideoClient(self.host)
+        cap = cv2.VideoCapture(self.url)
 
         while self.running:
 
-            image = client.receive()
+            ok, frame = cap.read()
 
-            if image:
+            if not ok:
+                continue
 
-                self.frame_ready.emit(image)
+            rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+            h, w, ch = rgb.shape
+
+            image = QImage(
+                rgb.data,
+                w,
+                h,
+                ch * w,
+                QImage.Format_RGB888,
+            ).copy()
+
+            self.frame_ready.emit(image)
+
+        cap.release()
 
     def stop(self):
 
         self.running = False
+
+        self.wait()

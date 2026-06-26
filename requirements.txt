@@ -3,3 +3,5 @@ mavsdk==3.15.3
 protobuf==7.35.1
 typing_extensions==4.15.0
 pyserial>=3.5
+Flask
+opencv-python

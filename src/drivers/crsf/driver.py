@@ -53,3 +53,7 @@ class CRSFDriver:
         self.serial.send(frame)
 
         print(channels)
+
+        frame = Encoder.encode(channels)
+        print(frame.hex())
+        self.serial.send(frame)

@@ -44,16 +44,10 @@ class CRSFDriver:
             for x in channels
         ]
 
-        frame = CRSFPacker.encode(
-            channels
-        )
+        frame = CRSFPacker.encode(channels)
 
         print("CHANNELS:", channels)
         print("FRAME:", frame.hex())
+
         self.serial.send(frame)
 
-        print(channels)
-
-        frame = Encoder.encode(channels)
-        print(frame.hex())
-        self.serial.send(frame)

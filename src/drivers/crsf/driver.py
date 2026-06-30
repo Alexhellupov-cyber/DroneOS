@@ -20,8 +20,8 @@ class CRSFDriver:
 
             packet.roll,
             packet.pitch,
-            packet.throttle,
             packet.yaw,
+            packet.throttle,
 
             packet.aux1,
             packet.aux2,
@@ -45,9 +45,6 @@ class CRSFDriver:
         ]
 
         frame = CRSFPacker.encode(channels)
-
-        print("CHANNELS:", channels)
+        assert len(frame) == 26, len(frame)
         print("FRAME:", frame.hex())
-
         self.serial.send(frame)
-

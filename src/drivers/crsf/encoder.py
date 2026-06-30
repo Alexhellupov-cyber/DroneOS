@@ -7,58 +7,40 @@ class CRSFPacker:
     TYPE = 0x16
 
     @staticmethod
-    def rc_to_crsf(value: int) -> int:
-        """
-        Преобразование RC 1000..2000 -> CRSF 172..1811
-        """
-        value = max(1000, min(2000, value))
-
-        return round(
-            172 + (value - 1000) * (1811 - 172) / 1000
-        )
-
-    @staticmethod
     def encode(channels):
 
         if len(channels) != 16:
-            raise ValueError(
-                "CRSF requires exactly 16 channels"
-            )
+            raise ValueError("CRSF requires 16 channels")
 
-        payload = bytearray(22)
+        payload = bytearray()
 
-        bit_index = 0
+        bits = 0
+        bit_count = 0
 
         for ch in channels:
 
             ch &= 0x07FF
 
-            byte_index = bit_index // 8
-            shift = bit_index % 8
+            bits |= ch << bit_count
+            bit_count += 11
 
-            value = ch << shift
+            while bit_count >= 8:
+                payload.append(bits & 0xFF)
+                bits >>= 8
+                bit_count -= 8
 
-            payload[byte_index] |= value & 0xFF
-
-            if byte_index + 1 < len(payload):
-                payload[byte_index + 1] |= (value >> 8) & 0xFF
-
-            if byte_index + 2 < len(payload):
-                payload[byte_index + 2] |= (value >> 16) & 0xFF
-
-            bit_index += 11
+        if bit_count:
+            payload.append(bits & 0xFF)
 
         frame = bytearray()
 
-        frame.append(CRSFPacker.ADDRESS)
+        frame.append(0xC8)
         frame.append(24)
-        frame.append(CRSFPacker.TYPE)
+        frame.append(0x16)
 
-        frame.extend(payload)
+        frame.extend(payload[:22])
 
-        crc = CRSFCRC.calculate(
-            frame[2:]
-        )
+        crc = CRSFCRC.calculate(frame[2:])
 
         frame.append(crc)
 

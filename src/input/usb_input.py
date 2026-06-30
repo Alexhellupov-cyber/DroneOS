@@ -1,6 +1,6 @@
 import pygame
 from src.input.channel_mapper import ChannelMapper
-from src.network.rc_packet import RCPacket
+from src.input.rc_packet import RCPacket
 from src.input.channel_mapper import ChannelMapper
 
 

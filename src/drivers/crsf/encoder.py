@@ -1,16 +1,44 @@
 from src.drivers.crsf.crc import CRSFCRC
 
 
+class CRSFCRC:
+
+    POLY = 0xD5
+
+    @staticmethod
+    def calculate(data):
+
+        crc = 0
+
+        for byte in data:
+
+            crc ^= byte
+
+            for _ in range(8):
+
+                if crc & 0x80:
+                    crc = ((crc << 1) ^ CRSFCRC.POLY) & 0xFF
+                else:
+                    crc = (crc << 1) & 0xFF
+
+        return crc
+
+
 class CRSFPacker:
 
-    ADDRESS = 0xC8
-    TYPE = 0x16
+    @staticmethod
+    def rc_to_crsf(value: int) -> int:
+        """
+        RC 1000..2000 -> CRSF 172..1811
+        """
+        value = max(1000, min(2000, value))
+        return int((value - 1000) * (1811 - 172) / 1000 + 172)
 
     @staticmethod
     def encode(channels):
 
         if len(channels) != 16:
-            raise ValueError("CRSF requires 16 channels")
+            raise ValueError("CRSF requires exactly 16 channels")
 
         payload = bytearray()
 
@@ -34,9 +62,9 @@ class CRSFPacker:
 
         frame = bytearray()
 
-        frame.append(0xC8)
-        frame.append(24)
-        frame.append(0x16)
+        frame.append(0xC8)      # Device address
+        frame.append(24)        # Length
+        frame.append(0x16)      # RC Channels Packed
 
         frame.extend(payload[:22])
 

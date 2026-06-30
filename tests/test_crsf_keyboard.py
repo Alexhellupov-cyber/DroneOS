@@ -1,5 +1,4 @@
 import time
-import keyboard
 
 from src.drivers.crsf.driver import CRSFDriver
 from src.input.rc_packet import RCPacket
@@ -7,62 +6,48 @@ from src.input.rc_packet import RCPacket
 driver = CRSFDriver()
 
 packet = RCPacket()
-
 packet.roll = 1500
 packet.pitch = 1500
 packet.yaw = 1500
 packet.throttle = 1000
-
 packet.aux1 = 1000
 
-print("1 = ARM")
-print("2 = DISARM")
-print("W/S = THROTTLE")
-print("A/D = YAW")
-print("←/→ = ROLL")
-print("↑/↓ = PITCH")
+print("Starting automatic CRSF test...")
+
+start = time.time()
 
 while True:
+    t = time.time() - start
 
-    if keyboard.is_pressed("1"):
-        packet.aux1 = 2000
-
-    if keyboard.is_pressed("2"):
+    if t < 2:
         packet.aux1 = 1000
+        packet.throttle = 1000
+        print("Waiting...", end="\r")
 
-    if keyboard.is_pressed("w"):
-        packet.throttle = min(2000, packet.throttle + 5)
+    elif t < 4:
+        packet.aux1 = 2000
+        packet.throttle = 1000
+        print("ARM", end="\r")
 
-    if keyboard.is_pressed("s"):
-        packet.throttle = max(1000, packet.throttle - 5)
+    elif t < 6:
+        packet.throttle = 1100
+        print("Throttle 1100", end="\r")
 
-    if keyboard.is_pressed("a"):
-        packet.yaw = max(1000, packet.yaw - 5)
+    elif t < 8:
+        packet.throttle = 1200
+        print("Throttle 1200", end="\r")
 
-    if keyboard.is_pressed("d"):
-        packet.yaw = min(2000, packet.yaw + 5)
+    elif t < 10:
+        packet.throttle = 1000
+        print("Throttle 1000", end="\r")
 
-    if keyboard.is_pressed("left"):
-        packet.roll = max(1000, packet.roll - 5)
-
-    if keyboard.is_pressed("right"):
-        packet.roll = min(2000, packet.roll + 5)
-
-    if keyboard.is_pressed("up"):
-        packet.pitch = min(2000, packet.pitch + 5)
-
-    if keyboard.is_pressed("down"):
-        packet.pitch = max(1000, packet.pitch - 5)
+    else:
+        packet.aux1 = 1000
+        packet.throttle = 1000
+        print("\nDISARM")
+        break
 
     driver.send(packet)
-
-    print(
-        f"\rARM={packet.aux1} "
-        f"T={packet.throttle} "
-        f"R={packet.roll} "
-        f"P={packet.pitch} "
-        f"Y={packet.yaw}",
-        end=""
-    )
-
     time.sleep(0.004)
+
+print("Done.")

@@ -65,7 +65,7 @@ class OnboardServer:
                     self.last_packet = RCPacket(
                         **message.payload
                     )
-
+                    print("RECEIVED:", self.last_packet)
                 except Exception as e:
 
                     print(e)

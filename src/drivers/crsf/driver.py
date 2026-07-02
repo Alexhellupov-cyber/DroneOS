@@ -15,13 +15,13 @@ class CRSFDriver:
         self.serial.connect()
 
     def send(self, packet: RCPacket):
-
+        print("SEND:", packet)
         channels = [
 
             packet.roll,
             packet.pitch,
-            packet.yaw,
             packet.throttle,
+            packet.yaw,
 
             packet.aux1,
             packet.aux2,
@@ -36,7 +36,6 @@ class CRSFDriver:
             1000,
             1000,
             1000
-
         ]
 
         channels = [

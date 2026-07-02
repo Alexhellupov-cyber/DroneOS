@@ -1,5 +1,5 @@
 import time
-
+from ground.rc_sender import RCSender
 from corelib.config import ONBOARD_CONNECT_HOST, ONBOARD_PORT
 from corelib.logger import get_logger
 from corelib.network import DroneClient
@@ -24,10 +24,10 @@ class GroundDroneClient:
 
             try:
 
-                client.connect()
-
+                client.connect()                
                 logger.info("Connected to onboard")
-
+                sender = RCSender(client)
+                sender.start()
                 while True:
 
                     message = client.receive()

@@ -1,6 +1,6 @@
 from flask import Flask, Response
 
-from video import VideoCamera
+from backend.video import VideoCamera
 
 app = Flask(__name__)
 

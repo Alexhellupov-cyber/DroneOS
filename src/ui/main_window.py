@@ -179,7 +179,7 @@ class MainWindow(QWidget):
         # ==========================
 
         self.video = VideoThread(
-            "192.168.1.106"  # <-- IP Raspberry
+            "192.168.0.143"  # <-- IP Raspberry
         )
 
         self.video.frame_ready.connect(

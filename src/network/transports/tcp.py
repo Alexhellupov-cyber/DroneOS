@@ -7,7 +7,7 @@ from src.network.transports.base import BaseTransport
 class TCPTransport(BaseTransport):
 
     def __init__(self,
-                 host="192.168.0.143",
+                 host="192.168.0.102",
                  port=7000):
 
         self.host = host

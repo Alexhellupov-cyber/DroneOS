@@ -8,7 +8,7 @@ class ConnectionManager:
     def __init__(self):
 
         self.client = DroneClient(
-            "192.168.0.143",
+            "192.168.0.102",
             7000
         )
 

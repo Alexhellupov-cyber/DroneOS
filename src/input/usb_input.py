@@ -44,7 +44,7 @@ class USBInput:
             self.joystick.get_axis(2)
         )
 
-        packet.throttle = ChannelMapper.axis_to_rc(
+        packet.throttle = ChannelMapper.throttle_to_rc(
             self.joystick.get_axis(3)
         )
 

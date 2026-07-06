@@ -59,12 +59,13 @@ class OnboardServer:
                     if message is None:
                         break
 
-                    if message.type != "rc":
+                    if message.id != "rc":
                         continue
 
                     self.last_packet = RCPacket(
-                        **message.payload
+                        **message.type
                     )
+
                     print("RECEIVED:", self.last_packet)
                 except Exception as e:
 

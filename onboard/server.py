@@ -63,7 +63,7 @@ class OnboardServer:
                         continue
 
                     self.last_packet = RCPacket(
-                        **message.type
+                        **message.payload
                     )
 
                     print("RECEIVED:", self.last_packet)

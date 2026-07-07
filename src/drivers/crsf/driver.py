@@ -15,7 +15,6 @@ class CRSFDriver:
         self.serial.connect()
 
     def send(self, packet: RCPacket):
-        print("SEND:", packet)
         channels = [
 
             packet.roll,
@@ -42,16 +41,6 @@ class CRSFDriver:
             CRSFPacker.rc_to_crsf(x)
             for x in channels
         ]
-        print("RC :", [
-            packet.roll,
-            packet.pitch,
-            packet.yaw,
-            packet.throttle,
-            packet.aux1
-        ])
-
-        print("CRSF:", channels[:5])
         frame = CRSFPacker.encode(channels)
         assert len(frame) == 26, len(frame)
-        print("FRAME:", frame.hex())
         self.serial.send(frame)

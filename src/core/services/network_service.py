@@ -13,6 +13,6 @@ class NetworkService:
 
         self.network.send(
             rc(
-                packet.to_dict()
+                packet.__dict__
             )
         )

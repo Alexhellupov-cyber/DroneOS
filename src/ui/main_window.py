@@ -203,7 +203,6 @@ class MainWindow(QWidget):
     def update_loop(self):
 
         if self.connected:
-            print("SEND")
             self.controller.update()
 
         self.update_telemetry()
@@ -512,10 +511,6 @@ class MainWindow(QWidget):
         self.router.route(message)
 
     def update_system_telemetry(self, payload):
-
-        self.console_panel.log(
-            "Telemetry received"
-        )
 
         self.droneos_panel.status.setText(
             f"🟢 {payload['hostname']}"

@@ -27,7 +27,7 @@ class ApplicationController:
 
         packet = self.rc.update()
 
-        print("RC:", packet)
+
 
         self.network_service.send_rc(
             packet

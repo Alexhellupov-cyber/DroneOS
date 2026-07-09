@@ -1,6 +1,8 @@
 import time
+
 from src.drivers.crsf.driver import CRSFDriver
 from src.input.rc_packet import RCPacket
+
 from corelib.config import ONBOARD_BIND_HOST, ONBOARD_PORT
 from corelib.logger import get_logger
 from corelib.messages import telemetry
@@ -15,6 +17,7 @@ def main():
 
     telemetry_service = TelemetryService()
     crsf = CRSFDriver()
+
     server = DroneServer(
         ONBOARD_BIND_HOST,
         ONBOARD_PORT
@@ -26,31 +29,43 @@ def main():
 
         logger.info(f"Ground connected: {address}")
 
+        last_telemetry = time.time()
+
         try:
 
             while True:
 
-                incoming = client.receive_nowait()
+                # Обрабатываем ВСЕ входящие сообщения
+                while True:
 
-                if incoming:
+                    incoming = client.receive_nowait()
 
-                    logger.info(
-                        f"GROUND -> {incoming}"
-                    )
+                    if incoming is None:
+                        break
 
                     if incoming.type == "rc":
 
                         packet = RCPacket(
                             **incoming.payload
                         )
+
                         crsf.send(packet)
-                outgoing = telemetry(
-                    telemetry_service.collect()
-                )
 
-                client.send(outgoing)
+                # Телеметрия 10 Гц
+                now = time.time()
 
-                time.sleep(0.02)
+                if now - last_telemetry >= 0.1:
+
+                    client.send(
+                        telemetry(
+                            telemetry_service.collect()
+                        )
+                    )
+
+                    last_telemetry = now
+
+                # Минимальная пауза, чтобы не грузить CPU
+                time.sleep(0.001)
 
         except Exception as e:
 

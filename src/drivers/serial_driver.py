@@ -26,8 +26,7 @@ class SerialDriver:
             self.serial.close()
 
     def send(self, data: bytes):
-
-        self.serial.flush()
+        self.serial.write(data)
 
 
 
